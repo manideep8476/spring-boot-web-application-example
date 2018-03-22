@@ -20,7 +20,7 @@ pipeline  {
 			}
 		}
 		
-        stage 'Docker build'
+        stage ('Docker build')
     	    steps {
 		        sh '''
 			        sudo docker build -t demo
@@ -28,7 +28,7 @@ pipeline  {
 		        '''
 	        }
  
-        stage 'Docker push'
+        stage ('Docker push')
             steps {
                 docker.withRegistry('https://464375181876.dkr.ecr.us-east-1.amazonaws.com/manideep8476', 'ecr:us-east-1:ECR-credentials') {
                 docker.image('demo').push('latest')
