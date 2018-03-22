@@ -1,41 +1,37 @@
 pipeline  {
 	agent any
 	tools {
-		maven 'Maven3'
-		jdk 'JDK8'
-	}
+		    maven 'Maven3'
+		    jdk 'JDK8'
+	    }
 
 	stages {
 		stage('init') {
 			steps {
-				sh '''
-					echo "PATH = ${PATH}"
-					echo "M2_HOME = ${M2_HOME}"
-				'''
-			}
+				    sh '''
+				    	echo "PATH = ${PATH}"
+				    	echo "M2_HOME = ${M2_HOME}"
+				    '''
+			    }
 		}
-
-
-		stage ('Build') {
+        stage ('Build') {
 			steps {
 				sh 'mvn install'
 			}
 		}
-		stage 'Docker build'
-    	steps {
 		
-	    	sh '''
-			
-	
-		        sudo docker build -t demo
-	
-	        	sudo docker run demo
-		    '''
-	    }
+        stage 'Docker build'
+    	    steps {
+		        sh '''
+			        sudo docker build -t demo
+	                sudo docker run -p 8081:8585 demo
+		        '''
+	        }
  
         stage 'Docker push'
-            docker.withRegistry('https://464375181876.dkr.ecr.us-east-1.amazonaws.com/manideep8476', 'ecr:us-east-1:ECR-credentials') {
-            docker.image('demo').push('latest')
-        }
+            steps {
+                docker.withRegistry('https://464375181876.dkr.ecr.us-east-1.amazonaws.com/manideep8476', 'ecr:us-east-1:ECR-credentials') {
+                docker.image('demo').push('latest')
+            }
 	}
 }
