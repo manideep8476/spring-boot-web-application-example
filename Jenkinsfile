@@ -15,8 +15,6 @@ pipeline  {
 			}
 		}
 
-        stage 'Checkout'
-            git 'ssh://git@github.com:manideep8476/docker-pipeline-demo.git'
 
 		stage ('Build') {
 			steps {
