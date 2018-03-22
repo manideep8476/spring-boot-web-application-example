@@ -20,19 +20,20 @@ pipeline  {
 			}
 		}
 		
-        stage ('Docker build')
+	stage ('Docker build') {
     	    steps {
 		        sh '''
 			        sudo docker build -t demo
 	                sudo docker run -p 8081:8585 demo
 		        '''
 	        }
- 
-        stage ('Docker push')
+	}
+		stage ('Docker push') {
             steps {
                 docker.withRegistry('https://464375181876.dkr.ecr.us-east-1.amazonaws.com/manideep8476', 'ecr:us-east-1:ECR-credentials') {
                 docker.image('demo').push('latest')
             }
 	}
+		}
 }
 }
