@@ -15,27 +15,29 @@ pipeline  {
 			}
 		}
 
+        stage 'Checkout'
+            git 'ssh://git@github.com:manideep8476/docker-pipeline-demo.git'
+
 		stage ('Build') {
 			steps {
 				sh 'mvn install'
 			}
 		}
-		stage ('Docker') {
-	
-		steps {
+		stage 'Docker build'
+    	steps {
 		
-		sh '''
+	    	sh '''
 			
 	
-		sudo docker build -t boot-docker:${BUILD_NUMBER} ${WORKSPACE}
+		        sudo docker build -t demo
 	
-			sudo docker run -p 8081:8585 boot-docker:${BUILD_NUMBER}
-
-		'''
-			}
-	
-	}
-
-		
+	        	sudo docker run demo
+		    '''
+	    }
+ 
+        stage 'Docker push'
+            docker.withRegistry('https://464375181876.dkr.ecr.us-east-1.amazonaws.com/manideep8476', 'ecr:us-east-1:ECR-credentials') {
+            docker.image('demo').push('latest')
+        }
 	}
 }
